@@ -8,8 +8,19 @@ bg_color = Color(0.435294, 0.615686, 0.619608, 1)
 [node name="Coil" type="MarginContainer"]
 clip_children = 1
 custom_minimum_size = Vector2(5, 5)
-offset_right = 50.0
-offset_bottom = 50.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("1_1vpux")
 
 [node name="BG" type="Panel" parent="."]
@@ -21,13 +32,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_bpe7t")
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
-
-[node name="Label" type="Label" parent="."]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.05

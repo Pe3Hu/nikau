@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7on00noar2hs"]
+
+[ext_resource type="Script" path="res://scene/2/mana.gd" id="1_ogs2l"]
+[ext_resource type="PackedScene" uid="uid://ciw38iqel0v5a" path="res://scene/0/icon.tscn" id="3_e6d6n"]
+
+[node name="Mana" type="MarginContainer"]
+custom_minimum_size = Vector2(5, 5)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_ogs2l")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Element" parent="HBox" instance=ExtResource("3_e6d6n")]
+layout_mode = 2
+
+[node name="Volume" parent="HBox" instance=ExtResource("3_e6d6n")]
+layout_mode = 2

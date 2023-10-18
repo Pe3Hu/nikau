@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8p8p11wpyu27"]
+[gd_scene load_steps=5 format=3 uid="uid://c8p8p11wpyu27"]
 
 [ext_resource type="Script" path="res://scene/0/sketch.gd" id="1_08cwq"]
 [ext_resource type="FontFile" uid="uid://bvnpo88mdytkv" path="res://asset/font/letter/JosefinSans-Bold.ttf" id="1_b8lal"]
+[ext_resource type="PackedScene" uid="uid://c78a3rdbm33l0" path="res://scene/3/battlefield.tscn" id="3_ownmh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 bg_color = Color(0.372549, 0.372549, 0.372549, 1)
@@ -36,6 +37,13 @@ theme_override_fonts/font = ExtResource("1_b8lal")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slotmachines" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Battlefield" parent="HBox" instance=ExtResource("3_ownmh")]
+layout_mode = 2
+
+[node name="Slotmachines" type="HBoxContainer" parent="HBox"]
 layout_mode = 2
 alignment = 1

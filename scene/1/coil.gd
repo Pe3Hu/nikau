@@ -7,92 +7,105 @@ extends MarginContainer
 
 var slotmachine = null
 var tween = null
-var index = 0
+var index = null
 var pace = null
 var tick = null
 var time = null
 var skip = false#false true
 var anchor = null
-var temp = true
+var selected = null
 
 
 func set_attributes(input_: Dictionary) -> void:
 	slotmachine = input_.slotmachine
-	time = Time.get_unix_time_from_system()
+	index = input_.index
 	
-	for _i in input_.facets:
-		var input = {}
-		input.coil = self
-		input.element =  Global.arr.element[_i]
-		input.value = 1
-		var facet = Global.scene.facet.instantiate()
-		facets.add_child(facet)
-		facet.set_attributes(input)
-	
-	anchor = Vector2(0, -Global.vec.size.facet.y)
+	init_facets()
 	update_size()
 	reset()
 	#skip_animation()
 
 
+func init_facets() -> void:
+	var description = Global.dict.coil.index[index]
+	
+	for element in description.element:
+		for volume in description.element[element]:
+			var input = {}
+			input.coil = self
+			input.element = element
+			input.volume = volume
+			var facet = Global.scene.facet.instantiate()
+			facets.add_child(facet)
+			facet.set_attributes(input)
+
+
 func update_size() -> void:
+	time = Time.get_unix_time_from_system()
+	anchor = Vector2(0, -Global.vec.size.facet.y)
 	var vector = Global.vec.size.facet
-	vector.y *= 3
+	vector.y *= 5
 	custom_minimum_size = vector
 
 
 func reset() -> void:
 	shuffle_facets()
-	pace = 50
+	pace = 400
 	tick = 0
 	facets.position.y = -Global.vec.size.facet.y * 1
 	timer.start()
 
 
 func shuffle_facets() -> void:
-	var temp = []
+	var facets_ = []
 	
 	for facet in facets.get_children():
 		facets.remove_child(facet)
-		temp.append(facet)
+		facets_.append(facet)
 	
-	temp.shuffle()
+	facets_.shuffle()
 	
-	for facet in temp:
+	for facet in facets_:
 		facets.add_child(facet)
 
 
 func decelerate_spin() -> void:
-	tick += 1
-	var limit = {}
-	limit.min = 1.0
-	limit.max = max(limit.min, 5.0 - tick * 0.05)
-	#start 50 min 0.5 max 2.5 step 0.1 stop 4 = 10 sec
-	#start 50 min 1.5 max 2.5 step 0.1 stop 4 = 5 sec
-	#start 100 min 2.0 max 3.0 step 0.1 stop 4 = 4 sec
-	#start 50 min 1.0 max 5.0 step 0.1 stop 4 = 2.5 sec
-	#start 50 min 2.0 max 3.0 step 0.1 stop 10 = 2.5 sec
-	#start 50 min 2.0 max 5.0 step 0.1 stop 10 = 2 sec
-	#start 100 min 1.0 max 10.0 step 0.1 stop 10 = 2.2 sec
-	Global.rng.randomize()
-	var gap = Global.rng.randf_range(limit.min, limit.max)
-	pace = max(pace - gap, 0.5)
-	timer.wait_time = 1.0 / pace
-	
-	if pace == 0.5:
-		timer.set_paused(true)
-		#var facet = facets.get_child(1)
-		#print([get_index(), facet.tokenIcon.subtype, "end at", Time.get_unix_time_from_system() - time])
+	if !timer.is_paused():
+		tick += 1
+		var limit = {}
+		limit.min = 10.0
+		limit.max = max(limit.min, 25.0 - tick * 1.0)
+		#start 50  min 0.5 max 2.5 s tep 0.1 stop 4  = 10 sec
+		#start 50  min 1.5 max 2.5  step 0.1 stop 4  = 5 sec
+		#start 100 min 2.0 max 3.0  step 0.1 stop 4  = 4 sec
+		#start 50  min 1.0 max 5.0  step 0.1 stop 4  = 2.5 sec
+		#start 50  min 2.0 max 3.0  step 0.1 stop 10 = 2.5 sec
+		#start 50  min 2.0 max 5.0  step 0.1 stop 10 = 2 sec
+		#start 100 min 1.0 max 10.0 step 0.1 stop 10 = 2.2 sec
+		
+		#start 400 min10.0 max 25.0 step 1.00 stop 5.0 = 1 sec
+		#start 200 min 1.5 max 10.0 step 0.05 stop 1.0 = 4 sec
+		#start 200 min 1.5 max 10.0 step 0.15 stop 1.0 = 4 sec
+		#start 200 min 2.5 max 25.0 step 0.25 stop 0.5 = 2.5 sec
+		#start 200 min 2.0 max 15.0 step 0.25 stop 1.5 = 2.5 sec
+		#start 200 min 2.0 max 15.0 step 0.25 stop 1.5 = 2.5 sec
+		#start 30  min 1.0 max 5.0  step 0.05 stop 1.0 = 7 sec
+		Global.rng.randomize()
+		var gap = Global.rng.randf_range(limit.min, limit.max)
+		pace = max(pace - gap, 5.0)
+		timer.wait_time = 1.0 / pace
+		
+		if pace == 5.0:
+			timer.set_one_shot(true)
 		
 	#print([get_index(), pace])
 
 
 func _on_timer_timeout():
-	var time = 1.0 / pace
+	var time_ = 1.0 / pace
 	tween = create_tween()
-	tween.tween_property(facets, "position", Vector2(0, 0), time).from(anchor)
+	tween.tween_property(facets, "position", Vector2(0, 0), time_).from(anchor)
 	tween.tween_callback(pop_up)
-	decelerate_spin()
 
 
 func pop_up() -> void:
@@ -102,15 +115,24 @@ func pop_up() -> void:
 	if !skip:
 		facets.position = anchor
 		timer.start()
+	
+	
+	if timer.is_one_shot():
+		timer.stop()
+		slotmachine.spins.erase(self)
+		slotmachine.spin_check()
+		#print([get_index(), "end at", Time.get_unix_time_from_system() - time])
+	else:
+		decelerate_spin()
 
 
 func skip_animation() -> void:
 	var facet = facets.get_children().pick_random()
-	var index = facet.get_index()
-	var step = 1 - index
+	var index_ = facet.get_index()
+	var step = 1 - index_
 	
 	if step < 0:
-		step = facets.get_child_count() - index + 1
+		step = facets.get_child_count() - index_ + 1
 	
 	for _j in step:
 		pop_up()
@@ -121,11 +143,11 @@ func skip_animation() -> void:
 func scroll_to_facet(facet_: MarginContainer) -> void:
 	for facet in facets.get_children():
 		if facet.match(facet_):
-			var index = facet.get_index()
-			var step = 1 - index
+			var index_ = facet.get_index()
+			var step = 1 - index_
 			
 			if step < 0:
-				step = facets.get_child_count() - index + 1
+				step = facets.get_child_count() - index_ + 1
 			
 			for _j in step:
 				pop_up()
@@ -133,9 +155,12 @@ func scroll_to_facet(facet_: MarginContainer) -> void:
 			return
 
 
-func get_current_facet_value() -> int:
-	var facet =  facets.get_child(1)
-	return facet.value
+func select_facet(spot_: int) -> void:
+	if selected != null:
+		selected.set_selected(false)
+	
+	selected = facets.get_child(spot_)
+	selected.set_selected(true)
 
 
 func crush() -> void:
