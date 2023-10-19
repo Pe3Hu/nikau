@@ -1,7 +1,8 @@
 extends MarginContainer
 
 
-@onready var battlefield = $HBox/Battlefield
+@onready var battlefield = $HBox/VBox/Battlefield
+@onready var swarm = $HBox/VBox/Swarm
 @onready var slotmachines = $HBox/Slotmachines
 
 
@@ -9,6 +10,7 @@ func _ready() -> void:
 	var input = {}
 	input.sketch = self
 	battlefield.set_attributes(input)
+	swarm.set_attributes(input)
 	
 	init_slotmachines()
 

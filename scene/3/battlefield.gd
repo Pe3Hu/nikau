@@ -1,8 +1,8 @@
 extends MarginContainer
 
-@onready var hbox = $HBox
-@onready var cells = $HBox/Cells
-@onready var enemies = $HBox/Enemies
+
+@onready var bg = $BG
+@onready var cells = $Cells
 @onready var markers = $Markers
 
 var sketch = null
@@ -12,7 +12,7 @@ func set_attributes(input_: Dictionary) -> void:
 	sketch = input_.sketch
 	
 	init_cells()
-	spawn_enemies()
+	#enemy_turn()
 
 
 func init_cells() -> void:
@@ -27,28 +27,21 @@ func init_cells() -> void:
 			cells.add_child(cell)
 			cell.set_attributes(input)
 	
+	set_cell_neighbors() 
 
 
-func spawn_enemies() -> void:
-	var n = 3
-	var options = []
-	
-	for _i in Global.num.battlefield.size.col:
-		var grid = Vector2(_i, 0)
-		var cell = get_cell(grid)
-		options.append(cell)
-	
-	for _i in n:
-		var input = {}
-		input.battlefield = self
-		input.cell = options.pick_random()
-		
-		var enemy = Global.scene.enemy.instantiate()
-		enemies.add_child(enemy)
-		enemy.set_attributes(input)
-		options.erase(input.cell)
+func set_cell_neighbors() -> void:
+	for cell in cells.get_children():
+		for direction in Global.dict.neighbor.hybrid:
+			var neighbor = get_cell(cell.grid + direction)
+			
+			if neighbor != null:
+				cell.neighbors[neighbor] = direction
 
 
 func get_cell(grid_: Vector2) -> MarginContainer:
-	var index = grid_.y * Global.num.battlefield.size.col + grid_.x
-	return cells.get_child(index)
+	if grid_.y >= 0 and grid_.x >= 0 and grid_.x < Global.num.battlefield.size.col and grid_.y < Global.num.battlefield.size.row:
+		var index = grid_.y * Global.num.battlefield.size.col + grid_.x
+		return cells.get_child(index)
+	
+	return null

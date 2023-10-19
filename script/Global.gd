@@ -36,14 +36,67 @@ func init_num() -> void:
 	num.battlefield = {}
 	num.battlefield.size = {}
 	num.battlefield.size.col = 7
-	num.battlefield.size.row = 11
+	num.battlefield.size.row = 19
 
 
 func init_dict() -> void:
 	init_neighbor()
 	init_pattern()
 	init_coil()
-	init_token()
+	init_enemy()
+
+
+func init_neighbor() -> void:
+	dict.neighbor = {}
+	dict.neighbor.linear3 = [
+		Vector3( 0, 0, -1),
+		Vector3( 1, 0,  0),
+		Vector3( 0, 0,  1),
+		Vector3(-1, 0,  0)
+	]
+	dict.neighbor.linear2 = [
+		Vector2( 0,-1),
+		Vector2( 1, 0),
+		Vector2( 0, 1),
+		Vector2(-1, 0)
+	]
+	dict.neighbor.diagonal = [
+		Vector2( 1,-1),
+		Vector2( 1, 1),
+		Vector2(-1, 1),
+		Vector2(-1,-1)
+	]
+	
+	dict.neighbor.hybrid = []
+	
+	for _i in dict.neighbor.linear2.size():
+		dict.neighbor.hybrid.append(dict.neighbor.diagonal[_i])
+		dict.neighbor.hybrid.append(dict.neighbor.linear2[_i])
+	
+	dict.neighbor.zero = [
+		Vector2( 0, 0),
+		Vector2( 1, 0),
+		Vector2( 1, 1),
+		Vector2( 0, 1)
+	]
+	dict.neighbor.hex = [
+		[
+			Vector2( 1,-1), 
+			Vector2( 1, 0), 
+			Vector2( 0, 1), 
+			Vector2(-1, 0), 
+			Vector2(-1,-1),
+			Vector2( 0,-1)
+		],
+		[
+			Vector2( 1, 0),
+			Vector2( 1, 1),
+			Vector2( 0, 1),
+			Vector2(-1, 1),
+			Vector2(-1, 0),
+			Vector2( 0,-1)
+		]
+	]
 
 
 func init_pattern() -> void:
@@ -95,55 +148,23 @@ func init_coil() -> void:
 				dict.coil.index[index].element[element][volume] = coil[key]
 
 
-func init_token() -> void:
-	dict.token = {}
-	dict.token.title = {}
-
-
-func init_neighbor() -> void:
-	dict.neighbor = {}
-	dict.neighbor.patternar3 = [
-		Vector3( 0, 0, -1),
-		Vector3( 1, 0,  0),
-		Vector3( 0, 0,  1),
-		Vector3(-1, 0,  0)
-	]
-	dict.neighbor.patternar2 = [
-		Vector2( 0,-1),
-		Vector2( 1, 0),
-		Vector2( 0, 1),
-		Vector2(-1, 0)
-	]
-	dict.neighbor.diagonal = [
-		Vector2( 1,-1),
-		Vector2( 1, 1),
-		Vector2(-1, 1),
-		Vector2(-1,-1)
-	]
-	dict.neighbor.zero = [
-		Vector2( 0, 0),
-		Vector2( 1, 0),
-		Vector2( 1, 1),
-		Vector2( 0, 1)
-	]
-	dict.neighbor.hex = [
-		[
-			Vector2( 1,-1), 
-			Vector2( 1, 0), 
-			Vector2( 0, 1), 
-			Vector2(-1, 0), 
-			Vector2(-1,-1),
-			Vector2( 0,-1)
-		],
-		[
-			Vector2( 1, 0),
-			Vector2( 1, 1),
-			Vector2( 0, 1),
-			Vector2(-1, 1),
-			Vector2(-1, 0),
-			Vector2( 0,-1)
-		]
-	]
+func init_enemy() -> void:
+	dict.enemy = {}
+	dict.enemy.kind = {}
+	var path = "res://asset/json/nikau_enemy.json"
+	var array = load_data(path)
+	
+	for enemy in array:
+		dict.enemy.kind[enemy.kind] = {}
+		
+		for key in enemy:
+			if key != "kind":
+				var words = key.split(" ")
+				
+				if !dict.enemy.kind[enemy.kind].has(words[0]):
+					dict.enemy.kind[enemy.kind][words[0]] = {}
+				
+				dict.enemy.kind[enemy.kind][words[0]][words[1]] = enemy[key]
 
 
 func init_node() -> void:
@@ -177,7 +198,8 @@ func init_vec():
 	vec.size.number = Vector2(16, 32)
 	vec.size.facet = vec.size.icon + Vector2(vec.size.number.x, 0)
 	
-	vec.size.cell = Vector2(32, 32)
+	vec.size.cell = Vector2(24, 24)
+	vec.size.png = Vector2(32, 32)
 	init_window_size()
 
 

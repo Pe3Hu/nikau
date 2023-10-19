@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3g8lnha4cexa"]
+[gd_scene load_steps=6 format=3 uid="uid://d3g8lnha4cexa"]
 
 [ext_resource type="FontFile" uid="uid://bvnpo88mdytkv" path="res://asset/font/letter/JosefinSans-Bold.ttf" id="1_c5hi4"]
 [ext_resource type="Script" path="res://scene/3/enemy.gd" id="1_grtyx"]
 [ext_resource type="PackedScene" uid="uid://ciw38iqel0v5a" path="res://scene/0/icon.tscn" id="3_3o326"]
+[ext_resource type="PackedScene" uid="uid://3di7t6gn6bd1" path="res://scene/2/indicator.tscn" id="4_bnkjj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
@@ -40,28 +41,70 @@ vertical_alignment = 1
 layout_mode = 2
 alignment = 1
 
-[node name="Skull" parent="HBox" instance=ExtResource("3_3o326")]
-layout_mode = 2
-
-[node name="Index" parent="HBox" instance=ExtResource("3_3o326")]
-layout_mode = 2
-
-[node name="Health" type="HBoxContainer" parent="HBox"]
+[node name="VBox" type="VBoxContainer" parent="HBox"]
 layout_mode = 2
 alignment = 1
 
-[node name="Icon" parent="HBox/Health" instance=ExtResource("3_3o326")]
+[node name="Skull" parent="HBox/VBox" instance=ExtResource("3_3o326")]
 layout_mode = 2
 
-[node name="Value" parent="HBox/Health" instance=ExtResource("3_3o326")]
+[node name="Index" parent="HBox/VBox" instance=ExtResource("3_3o326")]
 layout_mode = 2
 
-[node name="Speed" type="HBoxContainer" parent="HBox"]
+[node name="Indicators" type="VBoxContainer" parent="HBox"]
 layout_mode = 2
+theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Icon" parent="HBox/Speed" instance=ExtResource("3_3o326")]
+[node name="Primary" type="HBoxContainer" parent="HBox/Indicators"]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Initiative" parent="HBox/Indicators/Primary" instance=ExtResource("4_bnkjj")]
 layout_mode = 2
 
-[node name="Value" parent="HBox/Speed" instance=ExtResource("3_3o326")]
+[node name="Speed" parent="HBox/Indicators/Primary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Health" parent="HBox/Indicators/Primary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Plague" parent="HBox/Indicators/Primary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Secondary" type="HBoxContainer" parent="HBox/Indicators"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Recovery" parent="HBox/Indicators/Secondary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Mucus" parent="HBox/Indicators/Secondary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Chitin" parent="HBox/Indicators/Secondary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Dodge" parent="HBox/Indicators/Secondary" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Resistance" type="HBoxContainer" parent="HBox/Indicators"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Aqua" parent="HBox/Indicators/Resistance" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Wind" parent="HBox/Indicators/Resistance" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Fire" parent="HBox/Indicators/Resistance" instance=ExtResource("4_bnkjj")]
+layout_mode = 2
+
+[node name="Earth" parent="HBox/Indicators/Resistance" instance=ExtResource("4_bnkjj")]
 layout_mode = 2

@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://3di7t6gn6bd1"]
+
+[ext_resource type="Script" path="res://scene/2/indicator.gd" id="1_wq0ot"]
+[ext_resource type="PackedScene" uid="uid://ciw38iqel0v5a" path="res://scene/0/icon.tscn" id="2_icaas"]
+
+[node name="Indicator" type="MarginContainer"]
+custom_minimum_size = Vector2(5, 5)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_wq0ot")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Title" parent="VBox" instance=ExtResource("2_icaas")]
+layout_mode = 2
+
+[node name="Value" parent="VBox" instance=ExtResource("2_icaas")]
+layout_mode = 2

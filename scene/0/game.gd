@@ -18,6 +18,11 @@ func _input(event) -> void:
 			KEY_D:
 				if event.is_pressed() && !event.is_echo():
 					Global.node.sketch.slotmachines.get_child(0).change_pattern(1)
+			KEY_1:
+				if event.is_pressed() && !event.is_echo():
+					Global.node.sketch.swarm.enemy_turn()
+					
+					
 
 
 func _process(delta_) -> void:
