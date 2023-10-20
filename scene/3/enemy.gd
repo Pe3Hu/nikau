@@ -20,6 +20,7 @@ extends MarginContainer
 var swarm = null
 var marker = null
 var kind = null
+var element = null
 
 
 func set_attributes(input_: Dictionary) -> void:
@@ -27,6 +28,7 @@ func set_attributes(input_: Dictionary) -> void:
 	kind = input_.kind
 	
 	set_icons()
+	roll_element()
 	init_marker(input_.cell)
 
 
@@ -34,7 +36,7 @@ func set_icons() -> void:
 	var description = Global.dict.enemy.kind[kind]
 	var input = {}
 	input.type = "skull"
-	input.subtype = 350
+	input.subtype = kind
 	skull.set_attributes(input)
 	
 	input = {}
@@ -42,7 +44,6 @@ func set_icons() -> void:
 	input.subtype = Global.num.index.enemy
 	index.set_attributes(input)
 	Global.num.index.enemy += 1
-	
 	
 	var hboxs = ["Primary", "Secondary", "Resistance"]
 	
@@ -56,24 +57,6 @@ func set_icons() -> void:
 			input.value = description[hbox.to_lower()][input.title]
 			indicator.set_attributes(input)
 
-#	input.type = "indicator"
-#	input.subtype = "health"
-#	healthIcon.set_attributes(input)
-#
-#	input = {}
-#	input.type = "number"
-#	input.subtype = 100
-#	healthValue.set_attributes(input)
-#
-#	input.type = "indicator"
-#	input.subtype = "speed"
-#	speedIcon.set_attributes(input)
-#
-#	input = {}
-#	input.type = "number"
-#	input.subtype = 3
-#	speedValue.set_attributes(input)
-
 
 func init_marker(cell_: MarginContainer) -> void:
 	var input = {}
@@ -82,3 +65,38 @@ func init_marker(cell_: MarginContainer) -> void:
 	marker = Global.scene.marker.instantiate()
 	swarm.battlefield.markers.add_child(marker)
 	marker.set_attributes(input)
+
+
+func roll_element() -> void:
+	var elements = ["aqua", "wind", "fire", "earth"]
+	element = elements.pick_random()
+	var opposition = Global.dict.element.opposition[element]
+	var indicator = get(element + "Resistance")
+	indicator.change_value(25)
+	
+	indicator = get(opposition + "Resistance")
+	indicator.change_value(-50)
+
+
+func detonation() -> void:
+	swarm.battlefield.markers.remove_child(marker)
+	marker.queue_free()
+	swarm.enemies.remove_child(self)
+	queue_free()
+
+
+func calc_expected_damage_based_on_mana_release(release_: Dictionary) -> int:
+	var value = -50
+	
+	if release_.element != "blood":
+		if Global.dict.element.parent.has(release_.element):
+			for child in Global.dict.element.parent[release_.element]:
+				var indicator = get(child + "Resistance")
+				value = max(value, indicator.get_value())
+		else:
+			var indicator = get(release_.element + "Resistance")
+			value = indicator.get_value()
+	
+	var multiplier = (100 + value) / 100.0
+	var result = floor(release_.volume * multiplier)
+	return result

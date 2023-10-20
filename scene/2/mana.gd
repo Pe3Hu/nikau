@@ -22,5 +22,9 @@ func set_attributes(input_: Dictionary) -> void:
 	volume.set_attributes(input)
 
 
+func get_volume() -> int:
+	return volume.get_number()
+
+
 func change_volume(value_: int) -> void:
 	volume.change_number(value_)

@@ -41,7 +41,7 @@ vertical_alignment = 1
 layout_mode = 2
 alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="HBox"]
+[node name="VBox" type="HBoxContainer" parent="HBox"]
 layout_mode = 2
 alignment = 1
 
@@ -57,6 +57,7 @@ theme_override_constants/separation = 0
 alignment = 1
 
 [node name="Primary" type="HBoxContainer" parent="HBox/Indicators"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1

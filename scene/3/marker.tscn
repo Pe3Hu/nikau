@@ -28,6 +28,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
 
 [node name="Skull" parent="." instance=ExtResource("2_o0fgx")]
+visible = false
 layout_mode = 2
 
 [node name="Index" parent="." instance=ExtResource("2_o0fgx")]

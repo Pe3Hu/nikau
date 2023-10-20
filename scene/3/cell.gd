@@ -17,14 +17,16 @@ func set_attributes(input_: Dictionary) -> void:
 	remoteness = Global.num.battlefield.size.row - grid.y - 1
 	marker.current = null
 	marker.future = null
-	set_color()
-
-
-func set_color() -> void:
+	
+	
 	custom_minimum_size = Vector2(Global.vec.size.cell)
 	var style = StyleBoxFlat.new()
 	bg.set("theme_override_styles/panel", style)
-	
+	set_parity_color()
+
+
+func set_parity_color() -> void:
+	var style = bg.get("theme_override_styles/panel")
 	var parity = (int(grid.y) * Global.num.battlefield.size.col + int(grid.x)) % 2
 	
 	match parity:
@@ -60,3 +62,8 @@ func get_closer_cell() -> Variant:
 			return neighbor
 	
 	return null
+
+
+func set_color_based_on_element(element_: String) -> void:
+	var style = bg.get("theme_override_styles/panel")
+	style.bg_color = Global.color.element[element_]

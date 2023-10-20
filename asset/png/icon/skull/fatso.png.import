@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bom4emuk8o3h0"
-path="res://.godot/imported/300.png-49c7c050e663927fda9649f8c7ee278a.ctex"
+uid="uid://c3qvre28snnwn"
+path="res://.godot/imported/fatso.png-3c1b4fd93055e337c6479beee259282c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/png/icon/skull/300.png"
-dest_files=["res://.godot/imported/300.png-49c7c050e663927fda9649f8c7ee278a.ctex"]
+source_file="res://asset/png/icon/skull/fatso.png"
+dest_files=["res://.godot/imported/fatso.png-3c1b4fd93055e337c6479beee259282c.ctex"]
 
 [params]
 

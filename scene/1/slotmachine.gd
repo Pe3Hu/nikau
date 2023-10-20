@@ -1,19 +1,24 @@
 extends MarginContainer
 
 
-@onready var coils = $HBox/Coils
-@onready var patterns = $HBox/Patterns
+@onready var coils = $VBox/HBox/Coils
+@onready var patterns = $VBox/HBox/Patterns
+@onready var sight = $VBox/Sight
 
 var spins = []
 var sketch = null
-var pattern = null
 
 
 func set_attributes(input_: Dictionary) -> void:
 	sketch = input_.sketch
 	
+	var input = {}
+	input.slotmachine = self
+	sight.set_attributes(input)
+	
 	init_coils()
 	init_patterns()
+	spin()
 
 
 func init_coils() -> void:
@@ -25,8 +30,6 @@ func init_coils() -> void:
 		coils.add_child(coil)
 		coil.set_attributes(input)
 		spins.append(coil)
-	
-	reset()
 
 
 func init_patterns() -> void:
@@ -38,7 +41,7 @@ func init_patterns() -> void:
 		patterns.add_child(pattern)
 		pattern.set_attributes(input)
 	
-	pattern = patterns.get_child(12)
+	sight.pattern = patterns.get_child(12)
 
 
 func reset() -> void:
@@ -48,18 +51,22 @@ func reset() -> void:
 		spins.append(coil)
 
 
-func change_pattern(shift_: int) -> void:
-	pattern.visible = false
-	var index = (pattern.get_index() + shift_ + Global.dict.pattern.index.keys().size()) % Global.dict.pattern.index.keys().size()
-	pattern = patterns.get_child(index) 
-	pattern.update_facets()
-
-
-func spin_check() -> void:
-	if spins.is_empty():
-		for pattern_ in patterns.get_children():
-			pattern_.fill_essences()
+func spin() -> void:
+	reset()
+	
+	for coil in coils.get_children():
+		if coil.selected != null:
+			coil.selected.set_selected(false)
 		
-		change_pattern(0)
+		coil.spin()
 
 
+func spin_end_check() -> void:
+	if spins.is_empty():
+		for pattern in patterns.get_children():
+			pattern.fill_essences()
+			pattern.find_anchors()
+		
+		sight.set_consequences()
+		sight.find_best_consequence()
+		#change_selected_pattern(0)

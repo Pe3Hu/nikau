@@ -41,6 +41,7 @@ func init_num() -> void:
 
 func init_dict() -> void:
 	init_neighbor()
+	init_element()
 	init_pattern()
 	init_coil()
 	init_enemy()
@@ -99,6 +100,29 @@ func init_neighbor() -> void:
 	]
 
 
+func init_element() -> void:
+	dict.element = {}
+	dict.element.opposition = {}
+	
+	for _i in arr.element.size():
+		var element = arr.element[_i]
+		var opposition = arr.element[(_i + arr.element.size() / 2) % arr.element.size()]
+		dict.element.opposition[element] = opposition
+	
+	
+	dict.element.child = {}
+	dict.element.child["aqua"] = ["ice", "plant"]
+	dict.element.child["wind"] = ["storm", "ice"]
+	dict.element.child["fire"] = ["lava", "storm"]
+	dict.element.child["earth"] = ["plant", "lava"]
+	
+	dict.element.parent = {}
+	dict.element.parent["ice"] = ["aqua", "wind"]
+	dict.element.parent["storm"] = ["wind", "fire"]
+	dict.element.parent["lava"] = ["fire", "earth"]
+	dict.element.parent["plant"] = ["earth", "aqua"]
+
+
 func init_pattern() -> void:
 	dict.pattern = {}
 	dict.pattern.index = {}
@@ -122,6 +146,33 @@ func init_pattern() -> void:
 				
 				if words.has("synergy"):
 					dict.pattern.index[index].synergy[words[1]] = pattern[key]
+	
+	for index in dict.pattern.index:
+		var pattern = dict.pattern.index[index]
+		var grids = []
+		var y = 0
+		
+		for coil in pattern.coil:
+			var grid = Vector2(coil, pattern.coil[coil])
+			grids.append(grid)
+			
+			if abs(grid.y - 2) > y:
+				y = abs(grid.y - 2)
+		
+		pattern.path = [Vector2()]
+		
+		for _i in grids.size():
+			if _i > 0:
+				var direction = grids[_i] - grids[_i - 1]
+				pattern.path.append(direction)
+		
+#		pattern.box = Vector2(5, (y - 1) * 2 + 1)
+#
+#		if grids[0].y != grids[4].y:
+#			pattern.box *= sign(grids[0].y - grids[4].y)
+#
+#		print([index, pattern.box])
+	pass
 
 
 func init_coil() -> void:
@@ -186,8 +237,8 @@ func init_scene() -> void:
 	scene.enemy = load("res://scene/3/enemy.tscn")
 	scene.marker = load("res://scene/3/marker.tscn")
 	
+	scene.consequence = load("res://scene/4/consequence.tscn")
 	
-	pass
 
 
 func init_vec():
@@ -220,6 +271,24 @@ func init_color():
 	color.cell = {}
 	color.cell.even = Color.from_hsv(0 / h, 0.0, 0.8)
 	color.cell.odd = Color.from_hsv(0 / h, 0.0, 0.2)
+	
+	color.element = {}
+	color.element.aqua = Color.from_hsv(245 / h, 0.55, 0.75)
+	color.element.ice = Color.from_hsv(215 / h, 1.0, 0.86)
+	color.element.wind = Color.from_hsv(170 / h, 1.0, 0.55)
+	color.element.storm = Color.from_hsv(225 / h, 0.5, 0.5)
+	color.element.fire = Color.from_hsv(0 / h, 1.0, 0.75)
+	color.element.lava = Color.from_hsv(195 / h, 1.0, 1.0)
+	color.element.earth = Color.from_hsv(35 / h, 1.0, 0.75)
+	color.element.plant = Color.from_hsv(15 / h, 0.25, 0.5)
+#	color.element.aqua = Color.from_hsv(245 / h, 0.55, 0.55)
+#	color.element.ice = Color.from_hsv(215 / h, 1.0, 0.66)
+#	color.element.wind = Color.from_hsv(170 / h, 1.0, 0.35)
+#	color.element.storm = Color.from_hsv(225 / h, 0.5, 0.3)
+#	color.element.fire = Color.from_hsv(0 / h, 1.0, 0.55)
+#	color.element.lava = Color.from_hsv(195 / h, 1.0, 0.8)
+#	color.element.earth = Color.from_hsv(35 / h, 1.0, 0.55)
+#	color.element.plant = Color.from_hsv(15 / h, 0.25, 0.3)
 
 
 func save(path_: String, data_: String):
@@ -234,3 +303,28 @@ func load_data(path_: String):
 	var json_object = JSON.new()
 	var parse_err = json_object.parse(text)
 	return json_object.get_data()
+
+
+func get_random_key(dict_: Dictionary):
+	if dict_.keys().size() == 0:
+		print("!bug! empty array in get_random_key func")
+		return null
+	
+	var total = 0
+	
+	for key in dict_.keys():
+		total += dict_[key]
+	
+	rng.randomize()
+	var index_r = rng.randf_range(0, 1)
+	var index = 0
+	
+	for key in dict_.keys():
+		var weight = float(dict_[key])
+		index += weight/total
+		
+		if index > index_r:
+			return key
+	
+	print("!bug! index_r error in get_random_key func")
+	return null

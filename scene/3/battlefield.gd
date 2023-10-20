@@ -45,3 +45,41 @@ func get_cell(grid_: Vector2) -> MarginContainer:
 		return cells.get_child(index)
 	
 	return null
+
+
+func check_row_on_markers(row_: int) -> bool:
+	for _i in Global.num.battlefield.size.col:
+		var grid = Vector2(_i, row_)
+		var cell = get_cell(grid)
+		
+		if cell.marker.current != null:
+			return true
+	
+	return false
+
+
+func check_anchor_bounds_based_on_pattern_index(anchor_: Vector2, index_: int) -> bool:
+	var grid = Vector2(anchor_)
+	
+	for direction in Global.dict.pattern.index[index_].path:
+		grid += direction
+		var cell = get_cell(grid)
+		
+		if cell == null:
+			return false
+	
+	return true
+
+
+func check_anchor_for_markers_based_on_pattern_index(anchor_: Vector2, index_: int) -> bool:
+	if check_anchor_bounds_based_on_pattern_index(anchor_, index_):
+		var grid = Vector2(anchor_)
+		
+		for direction in Global.dict.pattern.index[index_].path:
+			grid += direction
+			var cell = get_cell(grid)
+			
+			if cell.marker.current != null:
+				return true
+	
+	return false

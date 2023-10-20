@@ -21,12 +21,15 @@ func set_attributes(input_: Dictionary) -> void:
 	input.subtype = input_.value
 	value.set_attributes(input)
 	
-	if input_.value == 0:
+	if input_.value == 0 and input_.title != "initiative":
 		visible = false
 
 
 func change_value(value_: int) -> void:
 	value.change_number(value_)
+	
+	if get_value() != 0:
+		visible = true
 
 
 func get_value() -> int:

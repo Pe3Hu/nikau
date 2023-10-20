@@ -29,6 +29,3 @@ func set_selected(selected_: bool) -> void:
 		false:
 			style.bg_color = Global.color.facet.unselected
 
-
-func qualifies(facet_: MarginContainer) -> bool:
-	return true

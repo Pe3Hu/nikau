@@ -14,15 +14,19 @@ func _input(event) -> void:
 		match event.keycode:
 			KEY_A:
 				if event.is_pressed() && !event.is_echo():
-					Global.node.sketch.slotmachines.get_child(0).change_pattern(-1)
+					Global.node.sketch.slotmachines.get_child(0).sight.change_selected_pattern(-1)
 			KEY_D:
 				if event.is_pressed() && !event.is_echo():
-					Global.node.sketch.slotmachines.get_child(0).change_pattern(1)
+					Global.node.sketch.slotmachines.get_child(0).sight.change_selected_pattern(1)
+			KEY_Q:
+				if event.is_pressed() && !event.is_echo():
+					Global.node.sketch.slotmachines.get_child(0).sight.change_selected_anchor(-1)
+			KEY_E:
+				if event.is_pressed() && !event.is_echo():
+					Global.node.sketch.slotmachines.get_child(0).sight.change_selected_anchor(1)
 			KEY_1:
 				if event.is_pressed() && !event.is_echo():
 					Global.node.sketch.swarm.enemy_turn()
-					
-					
 
 
 func _process(delta_) -> void:

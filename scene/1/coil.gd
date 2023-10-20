@@ -22,7 +22,9 @@ func set_attributes(input_: Dictionary) -> void:
 	
 	init_facets()
 	update_size()
-	reset()
+	
+	shuffle_facets()
+	facets.position.y = -Global.vec.size.facet.y * 1
 	#skip_animation()
 
 
@@ -49,10 +51,13 @@ func update_size() -> void:
 
 
 func reset() -> void:
-	shuffle_facets()
 	pace = 400
 	tick = 0
-	facets.position.y = -Global.vec.size.facet.y * 1
+
+
+func spin() -> void:
+	reset()
+	timer.set_one_shot(false)
 	timer.start()
 
 
@@ -70,35 +75,17 @@ func shuffle_facets() -> void:
 
 
 func decelerate_spin() -> void:
-	if !timer.is_paused():
-		tick += 1
-		var limit = {}
-		limit.min = 10.0
-		limit.max = max(limit.min, 25.0 - tick * 1.0)
-		#start 50  min 0.5 max 2.5 s tep 0.1 stop 4  = 10 sec
-		#start 50  min 1.5 max 2.5  step 0.1 stop 4  = 5 sec
-		#start 100 min 2.0 max 3.0  step 0.1 stop 4  = 4 sec
-		#start 50  min 1.0 max 5.0  step 0.1 stop 4  = 2.5 sec
-		#start 50  min 2.0 max 3.0  step 0.1 stop 10 = 2.5 sec
-		#start 50  min 2.0 max 5.0  step 0.1 stop 10 = 2 sec
-		#start 100 min 1.0 max 10.0 step 0.1 stop 10 = 2.2 sec
-		
-		#start 400 min10.0 max 25.0 step 1.00 stop 5.0 = 1 sec
-		#start 200 min 1.5 max 10.0 step 0.05 stop 1.0 = 4 sec
-		#start 200 min 1.5 max 10.0 step 0.15 stop 1.0 = 4 sec
-		#start 200 min 2.5 max 25.0 step 0.25 stop 0.5 = 2.5 sec
-		#start 200 min 2.0 max 15.0 step 0.25 stop 1.5 = 2.5 sec
-		#start 200 min 2.0 max 15.0 step 0.25 stop 1.5 = 2.5 sec
-		#start 30  min 1.0 max 5.0  step 0.05 stop 1.0 = 7 sec
-		Global.rng.randomize()
-		var gap = Global.rng.randf_range(limit.min, limit.max)
-		pace = max(pace - gap, 5.0)
-		timer.wait_time = 1.0 / pace
-		
-		if pace == 5.0:
-			timer.set_one_shot(true)
-		
-	#print([get_index(), pace])
+	tick += 1
+	var limit = {}
+	limit.min = 10.0
+	limit.max = max(limit.min, 25.0 - tick * 1.0)
+	Global.rng.randomize()
+	var gap = Global.rng.randf_range(limit.min, limit.max)
+	pace = max(pace - gap, 5.0)
+	timer.wait_time = 1.0 / pace
+	
+	if pace == 5.0:
+		timer.set_one_shot(true)
 
 
 func _on_timer_timeout():
@@ -116,11 +103,10 @@ func pop_up() -> void:
 		facets.position = anchor
 		timer.start()
 	
-	
 	if timer.is_one_shot():
 		timer.stop()
 		slotmachine.spins.erase(self)
-		slotmachine.spin_check()
+		slotmachine.spin_end_check()
 		#print([get_index(), "end at", Time.get_unix_time_from_system() - time])
 	else:
 		decelerate_spin()

@@ -6,20 +6,23 @@ extends MarginContainer
 
 var tween = null
 var enemy = null
+var battlefield = null
 var cell = {}
 var destinations = {}
 var departures = []
 var length = null
+var action = true
 
 
 func set_attributes(input_: Dictionary) -> void:
 	enemy = input_.enemy
+	battlefield = input_.enemy.swarm.battlefield
 	cell.future = null
 	occupy_cell(input_.cell)
 	
 	var input = {}
 	input.type = "skull"
-	input.subtype = 350
+	input.subtype = enemy.kind
 	skull.set_attributes(input)
 	
 	input = {}
@@ -42,10 +45,12 @@ func occupy_cell(cell_: MarginContainer) -> void:
 	
 	cell_.marker.current = self
 	cell.current = cell_
-	paint_cell()
+	var opposition = Global.dict.element.opposition[enemy.element]
+	cell.current.set_color_based_on_element(opposition)
 
 
 func reserve_cell(cell_: MarginContainer) -> void:
+	cell.current.set_parity_color()
 	cell.current.marker.current = null
 	cell.current = null
 	
@@ -54,23 +59,48 @@ func reserve_cell(cell_: MarginContainer) -> void:
 
 
 func find_reserve_cell() -> void:
-	set_destinations_based_on_dijkstra()
-	var datas = []
-	for destination in destinations:
-		var data = {}
-		data.cell = destination
-		data.remoteness = destination.remoteness
-		datas.append(data)
+	var destination = null
+	skull.visible = false
 	
-	datas.sort_custom(func(a, b): return  a.remoteness < b.remoteness)
+	if enemy.kind == "leaper":
+		destination = leap()
 	
-	var options = []
+	if destination == null:
+		set_destinations_based_on_dijkstra()
+		var datas = []
+		var remoteness = cell.current.remoteness
+		
+		for cell_ in destinations:
+			var data = {}
+			data.cell = cell_
+			data.remoteness = cell_.remoteness
+			data.step = destinations[cell_].step
+			data.length = destinations[cell_].length
+			
+			if remoteness > data.remoteness:
+				remoteness = data.remoteness
+			
+			datas.append(data)
+		
+		var options = []
+		
+		if remoteness > 0:
+			datas.sort_custom(func(a, b): return  a.remoteness - a.step < b.remoteness - b.step)
+			
+			for data in datas:
+				if data.remoteness == datas.front().remoteness:
+					options.append(data)
+					
+			destination = options.pick_random().cell
+		else:
+			datas.sort_custom(func(a, b): return  a.length < b.length)
+			
+			for data in datas:
+				if data.remoteness == remoteness:
+					options.append(data)
+			
+			destination = options.front().cell
 	
-	for data in datas:
-		if data.remoteness == datas.front().remoteness:
-			options.append(data.cell)
-	
-	var destination = options.pick_random()
 	reserve_cell(destination)
 
 
@@ -80,8 +110,15 @@ func slide() -> void:
 		var destination = cell.future.grid * Global.vec.size.cell - Vector2.ONE * 0.125 * Global.vec.size.cell
 		tween = create_tween()
 		tween.tween_property(self, "position", destination, time).from(position)
+		tween.tween_callback(slide_end)
+
+
+func slide_end() -> void:
+	if cell.future.remoteness != 0:
 		occupy_cell(cell.future)
-	#tween.tween_callback(pop_up)
+	else:
+		cell.future.marker.future = null
+		enemy.detonation()
 
 
 func set_destinations_based_on_dijkstra() -> void:
@@ -97,11 +134,12 @@ func set_destinations_based_on_dijkstra() -> void:
 			departures.sort_custom(func(a, b): return  destinations[a].length <  destinations[b].length)
 			var departure = departures.pop_front()
 			
-			for neighbor in departure.neighbors:
-				if neighbor.marker.future == null and cell.current.remoteness > neighbor.remoteness:
-					add_destination(neighbor)
-					compare_two_cells(departure, neighbor)
-		
+			if departure != null:
+				for neighbor in departure.neighbors:
+					if neighbor.marker.future == null and cell.current.remoteness >= neighbor.remoteness:
+						add_destination(neighbor)
+						compare_two_cells(departure, neighbor)
+			
 		for destination in destinations.keys():
 			if destinations[destination].parent == null:
 				destinations.erase(destination)
@@ -134,6 +172,21 @@ func compare_two_cells(parent_: MarginContainer, child_: MarginContainer) -> voi
 
 func paint_cell() -> void:
 	var h = float(enemy.index.get_number()) / Global.num.index.enemy
-	
 	var style = cell.current.bg.get("theme_override_styles/panel")
 	style.bg_color = Color.from_hsv(h, 1.0, 1.0)
+
+
+func leap() -> Variant:
+	var touchdown = null
+	
+	if action:
+		for _i in range(cell.current.grid.y + 1, Global.num.battlefield.size.row - 1, 1):
+			var grid = Vector2(cell.current.grid.x, _i)
+			var cell_ = battlefield.get_cell(grid)
+			#print([grid,  cell_.future])
+			
+			if cell_.marker.future != null:
+				touchdown = battlefield.get_cell(grid + Vector2(0, 1))
+		
+		action = false
+	return touchdown

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfpkh30lu05ag"
-path="res://.godot/imported/335.png-363437387efe557362e03cb9976164d7.ctex"
+uid="uid://cxpyrl8uof8b4"
+path="res://.godot/imported/titan.png-2685f174acafbb45b6e814961648fec4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/png/icon/skull/335.png"
-dest_files=["res://.godot/imported/335.png-363437387efe557362e03cb9976164d7.ctex"]
+source_file="res://asset/png/icon/skull/titan.png"
+dest_files=["res://.godot/imported/titan.png-2685f174acafbb45b6e814961648fec4.ctex"]
 
 [params]
 

@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcgtwvxdbkcx1"]
+[gd_scene load_steps=3 format=3 uid="uid://ce6m04sbjtuvc"]
 
-[ext_resource type="Script" path="res://scene/3/cell.gd" id="1_boyml"]
+[ext_resource type="Script" path="res://scene/4/sight.gd" id="1_irqp7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
-[node name="Cell" type="MarginContainer"]
+[node name="Sight" type="MarginContainer"]
 custom_minimum_size = Vector2(5, 5)
 anchors_preset = 8
 anchor_left = 0.5
@@ -19,8 +19,12 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("1_boyml")
+script = ExtResource("1_irqp7")
 
 [node name="BG" type="Panel" parent="."]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
+
+[node name="Consequences" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1

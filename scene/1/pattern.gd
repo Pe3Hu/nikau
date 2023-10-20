@@ -7,11 +7,14 @@ extends MarginContainer
 @onready var mana = $HBox/Mana
 
 var slotmachine = null
+var battlefield = null
 var synergy = {}
+var anchors = []
 
 
 func set_attributes(input_: Dictionary) -> void:
 	slotmachine = input_.slotmachine
+	battlefield = slotmachine.sketch.battlefield
 	
 	synergy.element = null
 	
@@ -92,6 +95,7 @@ func set_mana() -> void:
 	
 	mana.set_attributes(input)
 
+
 func update_facets() -> void:
 	visible = true
 	var description = Global.dict.pattern.index[index.get_number()]
@@ -114,3 +118,23 @@ func change_essence(subtype_: String, value_: int) -> void:
 	var essence = get_essence(subtype_)
 	essence.volume.change_number(value_)
 	essence.visible = essence.volume.get_number() > 0
+
+
+func find_anchors() -> void:
+	anchors = []
+	
+	for _i in Global.num.battlefield.size.row:
+		for _j in Global.num.battlefield.size.col - slotmachine.coils.get_child_count() + 1:
+			var grid = Vector2(_j, _i)
+			
+			if battlefield.check_anchor_for_markers_based_on_pattern_index(grid, index.get_number()):
+				var anchor = battlefield.get_cell(grid)
+				anchors.append(anchor)
+
+
+func get_mana_release() -> Dictionary:
+	var base = 40
+	var release = {}
+	release.element = mana.element.subtype
+	release.volume = floor(base * (mana.get_volume() + 10.0) / 10.0)
+	return release
