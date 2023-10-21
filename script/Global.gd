@@ -31,7 +31,10 @@ func init_arr() -> void:
 
 func init_num() -> void:
 	num.index = {}
-	num.index.enemy = 0 
+	num.index.enemy = 0
+	num.index.cell = 0
+	num.index.combo = 0
+	
 	
 	num.battlefield = {}
 	num.battlefield.size = {}
@@ -135,6 +138,7 @@ func init_pattern() -> void:
 		dict.pattern.index[index] = {}
 		dict.pattern.index[index].coil = {}
 		dict.pattern.index[index].synergy = {}
+		dict.pattern.index[index].grids = []
 		
 		for key in pattern:
 			if key != "index":
@@ -143,6 +147,7 @@ func init_pattern() -> void:
 				if words.has("coil"):
 					var coil = int(words[1])
 					dict.pattern.index[index].coil[coil] = pattern[key]
+					dict.pattern.index[index].grids.append(Vector2(coil, pattern[key]))
 				
 				if words.has("synergy"):
 					dict.pattern.index[index].synergy[words[1]] = pattern[key]
@@ -165,14 +170,41 @@ func init_pattern() -> void:
 			if _i > 0:
 				var direction = grids[_i] - grids[_i - 1]
 				pattern.path.append(direction)
-		
-#		pattern.box = Vector2(5, (y - 1) * 2 + 1)
-#
-#		if grids[0].y != grids[4].y:
-#			pattern.box *= sign(grids[0].y - grids[4].y)
-#
-#		print([index, pattern.box])
-	pass
+	
+	init_combo()
+
+
+func init_combo() -> void:
+	dict.combo = {}
+	dict.combo.index = {}
+	
+	for _i in dict.pattern.index:
+		for _j in dict.pattern.index:
+			var flag = overlap_pattern_check([_i, _j])
+			
+			if !flag:
+				for _l in dict.pattern.index:
+					flag = overlap_pattern_check([_i, _l])
+					
+					if !flag:
+						flag = overlap_pattern_check([_j, _l])
+						
+						if !flag:
+							dict.combo.index[num.index.combo] = [_i, _j, _l]
+							num.index.combo += 1
+
+
+func overlap_pattern_check(indexs_: Array) -> bool:
+	var a = dict.pattern.index[indexs_[0]].grids
+	var b = dict.pattern.index[indexs_[1]].grids
+	a.resize(2)
+	b.resize(2)
+	
+	for grid in a:
+		if b.has(grid):
+			return true
+	
+	return false
 
 
 func init_coil() -> void:
@@ -238,6 +270,7 @@ func init_scene() -> void:
 	scene.marker = load("res://scene/3/marker.tscn")
 	
 	scene.consequence = load("res://scene/4/consequence.tscn")
+	scene.impact = load("res://scene/4/impact.tscn")
 	
 
 

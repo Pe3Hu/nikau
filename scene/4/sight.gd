@@ -2,6 +2,7 @@ extends MarginContainer
 
 
 @onready var consequences = $Consequences
+@onready var combo = $Combo
 
 var slotmachine = null
 var battlefield = null
@@ -12,6 +13,11 @@ var anchor = null
 func set_attributes(input_: Dictionary) -> void:
 	slotmachine = input_.slotmachine
 	battlefield = slotmachine.sketch.battlefield
+	
+	var input = {}
+	input.sight = self
+	combo.set_attributes(input)
+	
 
 
 func change_selected_pattern(shift_: int) -> void:
@@ -96,6 +102,11 @@ func reset_consequence() -> void:
 		consequence.queue_free()
 
 
+func fill_combo_based_on_damage() -> void:
+	combo.prepare_best_consequences_based_on_damage()
+	combo.find_best_trio_based_on_damage()
+
+
 func find_best_pattern_based_on_mana() -> void:
 	var datas = []
 	
@@ -106,25 +117,4 @@ func find_best_pattern_based_on_mana() -> void:
 		datas.append(data)
 	
 	datas.sort_custom(func(a, b): return a.mana > b.mana)
-	set_pattern_as_selected(datas.front().pattern)
-
-
-func find_best_consequence() -> void:
-	var consequence = get_best_consequence_based_on_damage()
-	set_pattern_as_selected(consequence.pattern)
-	set_anchor_as_selected(consequence.anchor)
-	print([consequence.pattern.index.get_number(), consequence.anchor.grid, consequence.damage])
-
-
-func get_best_consequence_based_on_damage() -> MarginContainer:
-	var datas = []
-	
-	for consequence in consequences.get_children():
-		var data = {}
-		data.consequence = consequence
-		data.rate = consequence.rate.damage
-		datas.append(data)
-	
-	datas.sort_custom(func(a, b): return a.rate > b.rate)
-	return datas.front().consequence
-
+	#set_pattern_as_selected(datas.front().pattern)

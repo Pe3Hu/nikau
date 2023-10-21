@@ -68,5 +68,5 @@ func spin_end_check() -> void:
 			pattern.find_anchors()
 		
 		sight.set_consequences()
-		sight.find_best_consequence()
+		sight.fill_combo_based_on_damage()
 		#change_selected_pattern(0)

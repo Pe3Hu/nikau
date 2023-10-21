@@ -1,11 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://ce6m04sbjtuvc"]
+[gd_scene load_steps=3 format=3 uid="uid://bxbvot4a8vgrb"]
 
-[ext_resource type="Script" path="res://scene/4/sight.gd" id="1_irqp7"]
-[ext_resource type="PackedScene" uid="uid://bxbvot4a8vgrb" path="res://scene/4/combo.tscn" id="2_a1noi"]
+[ext_resource type="Script" path="res://scene/4/combo.gd" id="1_v1yv4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
-[node name="Sight" type="MarginContainer"]
+[node name="Combo" type="MarginContainer"]
 custom_minimum_size = Vector2(5, 5)
 anchors_preset = 8
 anchor_left = 0.5
@@ -20,15 +19,12 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("1_irqp7")
+script = ExtResource("1_v1yv4")
 
 [node name="BG" type="Panel" parent="."]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
 
-[node name="Consequences" type="HBoxContainer" parent="."]
+[node name="Consequences" type="VBoxContainer" parent="."]
 layout_mode = 2
 alignment = 1
-
-[node name="Combo" parent="." instance=ExtResource("2_a1noi")]
-layout_mode = 2

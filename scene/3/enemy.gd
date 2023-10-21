@@ -86,7 +86,7 @@ func detonation() -> void:
 
 
 func calc_expected_damage_based_on_mana_release(release_: Dictionary) -> int:
-	var value = -50
+	var value = 75
 	
 	if release_.element != "blood":
 		if Global.dict.element.parent.has(release_.element):
@@ -97,6 +97,10 @@ func calc_expected_damage_based_on_mana_release(release_: Dictionary) -> int:
 			var indicator = get(release_.element + "Resistance")
 			value = indicator.get_value()
 	
-	var multiplier = (100 + value) / 100.0
+	var multiplier = 100.0 / (100 + value)
+	
+	if value < 0:
+		multiplier = 2 - 100.0 / (100 - value)
+	
 	var result = floor(release_.volume * multiplier)
 	return result

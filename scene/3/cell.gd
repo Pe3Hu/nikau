@@ -6,6 +6,7 @@ extends MarginContainer
 var battlefield = null
 var grid = null
 var remoteness = null
+var index = null
 var neighbors = {}
 var spawner = []
 var marker = {}
@@ -15,6 +16,8 @@ func set_attributes(input_: Dictionary) -> void:
 	battlefield = input_.battlefield
 	grid = input_.grid
 	remoteness = Global.num.battlefield.size.row - grid.y - 1
+	index = Global.num.index.cell
+	Global.num.index.cell += 1
 	marker.current = null
 	marker.future = null
 	

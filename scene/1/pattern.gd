@@ -10,6 +10,7 @@ var slotmachine = null
 var battlefield = null
 var synergy = {}
 var anchors = []
+var active = true
 
 
 func set_attributes(input_: Dictionary) -> void:

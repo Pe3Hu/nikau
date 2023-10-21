@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://buwbybkt7kk6m"]
+[gd_scene load_steps=4 format=3 uid="uid://buwbybkt7kk6m"]
 
 [ext_resource type="Script" path="res://scene/4/consequence.gd" id="1_82ip3"]
+[ext_resource type="PackedScene" uid="uid://ciw38iqel0v5a" path="res://scene/0/icon.tscn" id="2_tagxg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
@@ -25,3 +26,35 @@ script = ExtResource("1_82ip3")
 [node name="BG" type="Panel" parent="."]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Pattern" type="HBoxContainer" parent="HBox/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" parent="HBox/VBox/Pattern" instance=ExtResource("2_tagxg")]
+layout_mode = 2
+
+[node name="Index" parent="HBox/VBox/Pattern" instance=ExtResource("2_tagxg")]
+layout_mode = 2
+
+[node name="Anchor" type="HBoxContainer" parent="HBox/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" parent="HBox/VBox/Anchor" instance=ExtResource("2_tagxg")]
+layout_mode = 2
+
+[node name="Index" parent="HBox/VBox/Anchor" instance=ExtResource("2_tagxg")]
+layout_mode = 2
+
+[node name="Impacts" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+alignment = 1
